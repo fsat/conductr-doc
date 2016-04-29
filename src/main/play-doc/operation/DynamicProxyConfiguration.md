@@ -1,8 +1,8 @@
 # Dynamic proxy configuration
 
-The dynamic proxy configuration feature allows operations to provide a customized proxy configuration that would be updated automatically according to the applications that are running within ConductR cluster.
+The dynamic proxy configuration feature allows operations to provide a customized proxy configuration that would be updated automatically according to the applications that are running within the ConductR cluster.
 
-ConductR provides a default configuration with can be overridden should the need arise.  For example, HAProxy can provide HTTP Basic Auth for staging deployments enabling protected preview prior to promoting to production. This is accomplished by deploying a template haproxy.cfg file as part of the configuration of the HAproxy bundle.
+ConductR provides a default configuration that can be overridden should the need arise.  For example, HAProxy can provide HTTP Basic Auth for staging deployments enabling protected preview prior to promoting to production. This is accomplished by deploying a template `haproxy.cfg` file as part of the configuration of the HAProxy bundle.
 
 This document is a guide and reference for using dynamic HAProxy configuration templates.
 
@@ -23,7 +23,7 @@ The endpoints that failed to satisfy this requirement will be considered as dupl
 
 It is possible to provide custom HAProxy configuration by supplying configuration overrides to the ConductR HAProxy bundle.
 
-[ConductR CLI](CLI) is required to perform the following steps, and as such it needs to be installed beforehand.
+[[ConductR CLI|CLI]] is required to perform the following steps, and as such it needs to be installed beforehand.
 
 These are the steps to deploying custom HAProxy configuration.
 
@@ -31,7 +31,7 @@ These are the steps to deploying custom HAProxy configuration.
 
 Create a directory where the custom HAProxy configuration will be placed, e.g.
 
-```
+```lang-none
 mkdir -p /tmp/custom-haproxy-conf
 ```
 
@@ -39,7 +39,7 @@ mkdir -p /tmp/custom-haproxy-conf
 
 Create the custom HAProxy template, e.g.
 
-```bash
+```lang-none
 touch /tmp/custom-haproxy-conf/haproxy-override.cfg
 ```
 
@@ -95,13 +95,13 @@ Here are the explanation for the example template above:
 * *HAProxy Specific Configuration* section is populated with operating system specific setup. In the example above it is populated with a cut-down version of Ubuntu's configuration.
 * *Custom Endpoint Configuration* section contains application specific proxy configuration.
 * The endpoint that matches the following criteria has a custom configuration declared within the [ifAcl](#ifAcl) block:
-  * `system` is `public-site`
-  * `system version` is `1`
-  * `endpoint name` is `main`
+    * `system` is `public-site`
+    * `system version` is `1`
+    * `endpoint name` is `main`
 * The following takes place within custom configuration includes:
-  * HAProxy frontend `my_www_frontend` is configured to listen on HTTP port `80` and will relay request for `www.acme.com` to `my_www_backend`.
-  * HAProxy backend `my_www_backend` server is generated based on the backend server information contained within the [eachBackendServer](#eachBackendServer) helper function.
-  * The backend server information will be updated whenever there's changes to the endpoint, e.g. bundle instances being started or stopped the within the ConductR cluster.
+    * HAProxy frontend `my_www_frontend` is configured to listen on HTTP port `80` and will relay request for `www.acme.com` to `my_www_backend`.
+    * HAProxy backend `my_www_backend` server is generated based on the backend server information contained within the [eachBackendServer](#eachBackendServer) helper function.
+    * The backend server information will be updated whenever there's changes to the endpoint, e.g. bundle instances being started or stopped the within the ConductR cluster.
 * All other endpoints is for configured using ConductR default configuration. The HTTP endpoint is exposed on the port `9443`
 
 ### Deploying SSL certificate
@@ -112,7 +112,7 @@ It's possible to deploy SSL cert as part of the configuration override. The SSL 
 
 Continuing from previous example, place the SSL certificate in `/tmp/custom-haproxy-conf`, e.g.
 
-```bash
+```lang-none
 cp /tmp/test-cert.pem /tmp/custom-haproxy-conf
 ```
 
@@ -138,7 +138,7 @@ frontend my_www_frontend
 
 Create a file called `runtime-config.sh` within the proxy configuration directory, e.g.
 
-```bash
+```lang-none
 touch /tmp/custom-haproxy-conf/runtime-config.sh
 ```
 
@@ -158,8 +158,8 @@ The `CONFIG_DIR` refers to the directory where the configuration override will b
 
 Use the CLI to package the configuration override:
 
-```bash
-Felixs-MBP-2:~ felixsatyaputra$ shazar /tmp/custom-haproxy-conf
+```lang-none
+shazar /tmp/custom-haproxy-conf
 Created digested ZIP archive at ./custom-haproxy-conf-ffd0dcf76f4d565424a873022fbb39f3025d4239c87d307be3078b320988b052.zip
 
 ```
@@ -171,13 +171,13 @@ The generated file `custom-haproxy-conf-ffd0dcf76f4d565424a873022fbb39f3025d4239
 
 Once custom configuration override is generated, it can be loaded into ConductR, e.g:
 
-```
+```lang-none
 conduct load /tmp/conductr-haproxy-v2-0d24d10cb0d1af9bf9f7e0bf81778a61d2cc001f9393ef035cb343722da3ac87.zip /tmp/custom-haproxy-conf-ffd0dcf76f4d565424a873022fbb39f3025d4239c87d307be3078b320988b052.zip
 ```
 
 In the example above, the files required are placed within the `/tmp` directory. Replace the `/tmp` with the actual path to the files.
 
-Refer to the set of `conduct` commands described in [Deploying Bundles](#Deploying Bundles) for more details.
+Refer to the set of `conduct` commands described in [[Deploying bundles|DeployingBundlesOps]] for more details.
 
 ## Default configuration
 
@@ -267,68 +267,37 @@ frontend dummy
 
 The default configuration above is written in [Handlebars](http://handlebarsjs.com/) template, and thus the template makes use of variables and helper functions made available to the template.
 
-### Dynamic proxy configuration DSL
+## Dynamic proxy configuration DSL
 
-The variables and helper functions exposed to the template forms the DSL required to generate HAProxy configuration from the information available within ConductR cluster.
+The variables and helper functions exposed to the template forms the DSL required to generate HAProxy configuration from the information available within the ConductR cluster.
 
-The following variables are available to the template.
+### Variables
 
-* [bundles](#bundles)
-* [overrideConfigDir](#overrideConfigDir)
+The following variables are available to the template:
 
-The following helper functions are available to the template.
+| Name              | Type   | Description |
+|-------------------|--------|-------------|
+| haproxyHost       | String | Required: Host address of the proxy of which the configuration will be generated for.<br><br>Example: 10.0.2.223 |
+| bundles | JSON array | Required: List of bundles returned by the ConductR bundles endpoint. This list is in the form of an arrays where each element is a bundle represented by a JSON object. The cluster-wide information of what has been deployed and what is currently running is being stored in this variable.<br><br>Example: See Query bundle state |
+| overrideConfigDir | String | Optional: Physical directory location on the file system where configuration overrides has been unpacked. This variable is only defined when HAProxy custom template for ConductR HAProxy has been supplied.<br><br>Example: /tmp/0d24d10cb0d1af9bf9f7e0bf81778a61-e357d11e8a38228880aa57d976d6f83b/e357d11e8a38228880aa57d976d6f83b576fd95e21dc99e8e4d02d4b227b4be3<br><br>In the example above the content of the ConductR HAProxy configuration override zip has been unpacked into the directory `/tmp/0d24d10cb0d1af9bf9f7e0bf81778a61-e357d11e8a38228880aa57d976d6f83b/e357d11e8a38228880aa57d976d6f83b576fd95e21dc99e8e4d02d4b227b4be3`. |
+
+
+### Functions
+
+The following helper functions are available to the template:
 
 * [eachAcls](#eachAcls)
 * [ifAcl](#ifAcl)
 * [eachBackendServer](#eachBackendServer)
-  * [serverName](#serverName)
-  * [host](#host)
-  * [port](#port)
-* [haproxyHost](#haproxyHost)
+    * [serverName](#serverName)
+    * [host](#host)
+    * [port](#port)
+* [haproxyConf](#haproxyConf)
 * [serviceFrontends](#serviceFrontends)
 * [serviceBackends](#serviceBackends)
 
 
-##### haproxyHost
-
-Variable - String.
-
-Host address of the proxy of which the configuration will be generated for.
-
-Example:
-
-```
-10.0.2.223
-```
-
-
-##### bundles
-
-Variable - array of JSON object.
-
-List of bundles returned by the ConductR bundles endpoint. This list is in the form of an arrays where each element is a bundle represented by a JSON object.
-
-The cluster-wide information of what has been deployed and what is currently running is being stored in this variable.
-
-Refer to [Query bundle state](#Query-bundle-state) endpoint for an example of such JSON.
-
-##### overrideConfigDir
-
-Variable - optional, String
-
-Physical directory location on the file system where configuration overrides has been unpacked.
-
-This variable is optional - it is only defined when HAProxy custom template for ConductR HAProxy has been supplied.
-
-Example value of the variable:
-
-```
-/tmp/0d24d10cb0d1af9bf9f7e0bf81778a61-e357d11e8a38228880aa57d976d6f83b/e357d11e8a38228880aa57d976d6f83b576fd95e21dc99e8e4d02d4b227b4be3
-```
-
-In the example above the content of the ConductR HAProxy configuration override zip has been unpacked into the directory `/tmp/0d24d10cb0d1af9bf9f7e0bf81778a61-e357d11e8a38228880aa57d976d6f83b/e357d11e8a38228880aa57d976d6f83b576fd95e21dc99e8e4d02d4b227b4be3`.
-
-##### eachAcls
+#### eachAcls
 
 Iterates through each request ACL exposed by the endpoints given a list of bundles.
 
@@ -336,12 +305,14 @@ Used in conjunction with [ifAcl](#ifAcl) to provide customised configuration ove
 
 Once iteration of all bundles have been completed, generates default HAProxy configuration for the bundles without configuration override.
 
-Input arguments:
+##### Input arguments
 
-* `bundles` - Array of JSON object. List of bundles returned by the ConductR endpoint. Refer to [bundles](#bundles).
-* `defaultHttpPort` - Integer. Default HTTP port where HTTP-based endpoints will be exposed. This must be specified keyword argument - refer to the example usage below.
+| Name            | Type       | Description |
+|-----------------|------------|-------------|
+| bundles         | JSON array | Optional: List of bundles returned by the ConductR endpoint. Refer to [bundles](#bundles). |
+| defaultHttpPort | Integer    | Default HTTP port where HTTP-based endpoints will be exposed. This must be specified keyword argument - refer to the example usage below. |
 
-Example usage:
+##### Examples
 
 ```
 {{#eachAcls bundles defaultHttpPort=9000}}
@@ -350,7 +321,7 @@ Example usage:
 
 In the example above, default HAProxy configuration will be generated. Since no overrides has been specified, so all HTTP-based endpoint will be exposed via port `9000`.
 
-##### ifAcl
+#### ifAcl
 
 Given an endpoint has request ACL defined and it matches a particular `system`, `system version`, and `endpoint name`, the content nested within the `ifAcl` block will be rendered.
 
@@ -358,14 +329,18 @@ The `ifAcl` helper can be used as a stand-alone block helper, or nested within [
 
 When called within [eachAcls](#eachAcls) block, and the matching endpoint will be excluded when the default configuration is being generated.
 
-Input arguments:
+##### Input arguments
 
-* `bundles` - Optional. Array of JSON object. List of bundles returned by the ConductR endpoint. Refer to [bundles](#bundles).
-* `system` - String. Match criteria for a particular `system`.
-* `systemVersion` - String. Match criteria for a particular `system version`.
-* `endpointLabel` - String. Match criteria for a particular `endpoint name`.
+| Name          | Type       | Description |
+|---------------|------------|-------------|
+| bundles       | JSON array | Optional: List of bundles returned by the ConductR endpoint. Refer to [bundles](#bundles). |
+| system        | String     | Match criteria for a particular `system`. |
+| systemVersion | String     | Match criteria for a particular `system version`. |
+| endpointLabel | String     | Match criteria for a particular `endpoint name`. |
 
-Example usage - standalone:
+##### Examples
+
+_Standalone_
 
 ```
 frontend http_frontend
@@ -389,7 +364,8 @@ Should an endpoint that matches the above criteria is deployed and running, the 
 The content above contains additional DSLs such as [haproxyHost](#haproxyHost) which is explained in their respective sections.
 
 
-Example usage - within [eachAcls](#eachAcls) block:
+_Within [eachAcls](#eachAcls) block_
+
 
 ```
 {{#eachAcls bundles defaultHttpPort=9000}}
@@ -420,40 +396,23 @@ Should an endpoint that matches the above criteria is deployed and running, the 
 
 The content above contains additional DSLs such as [haproxyHost](#haproxyHost), [eachBackendServer](#eachBackendServer), [serverName](#serverName), [host](#host), and [port](#port) which are explained in their respective sections.
 
-##### eachBackendServer
+#### eachBackendServer
 
 Iterate through the backend server given a particular endpoint. The content declared within the `eachBackendServer` block will be generated given each backend server, and will be concatenated in the end.
 
 Can only be used within [ifAcl](#ifAcl) block.
 
-The `eachBackendServer` exposes the following variables.
+##### Input arguments
 
-* [serverName](*serverName)
-* [host](*host)
-* [port](*port)
+The `eachBackendServer` exposes the following variables. They are only scoped within `eachBackendServer` block:
 
-The variables above are only scoped within `eachBackendServer` block.
+| Name       | Type    | Description |
+|------------|---------|-------------|
+| serverName | String  | A server name unique to a particular backend server. Only visible within [eachBackendServer](#eachBackendServer) block. |
+| host       | String  | The host address of a particular backend server. Only visible within [eachBackendServer](#eachBackendServer) block. |
+| port       | Integer | The port of a particular backend server. Only visible within [eachBackendServer](#eachBackendServer) block. |
 
-###### serverName
-
-Variable - String.
-
-A server name unique to a particular backend server. Only visible within [eachBackendServer](#eachBackendServer) block.
-
-###### host
-
-Variable - String.
-
-The host address of a particular backend server. Only visible within [eachBackendServer](#eachBackendServer) block.
-
-###### port
-
-Variable - Integer.
-
-The port of a particular backend server. Only visible within [eachBackendServer](#eachBackendServer) block.
-
-
-Example of usage:
+##### Examples
 
 ```
 {{#ifAcl bundles 'typesafe-website' '1' 'www'}}
@@ -472,25 +431,28 @@ In the example above we are iterating through the backend server for the endpoin
 * `system version` is `1`
 * `endpoint name` is `www`
 
-##### haproxyConf
+#### haproxyConf
 
 Generates HAProxy configuration given bundle endpoints which are declared with `services` URI (as opposed to request acls).
 
-Input arguments:
+##### Input arguments
 
-* `bundles` - Array of JSON object. List of bundles returned by the ConductR endpoint. Refer to [bundles](#bundles).
+| Name          | Type       | Description |
+|---------------|------------|-------------|
+| bundles       | JSON array | Optional: List of bundles returned by the ConductR endpoint. Refer to [bundles](#bundles). |
+| haproxyConf   | String     | Works in conjunction with [serviceFrontends](#serviceFrontends) and [serviceBackends](#serviceBackends) below. |
 
-The `haproxyConf` helper works in conjunction with [serviceFrontends](#serviceFrontends) and [serviceBackends](#serviceBackends) below.
-
-###### serviceFrontends
+#### serviceFrontends
 
 Generates HAProxy frontend configuration given bundle endpoints which are declared with `services` URI (as opposed to request acls).
 
-###### serviceBackends
+#### serviceBackends
 
 Generates HAProxy backend configuration given bundle endpoints which are declared with `services` URI (as opposed to request acls).
 
-Example of usage for [haproxyConf](#haproxyConf), [serviceFrontends](#serviceFrontends), and [serviceBackends](#serviceBackends):
+##### Examples
+
+The functions [haproxyConf](#haproxyConf), [serviceFrontends](#serviceFrontends), and [serviceBackends](#serviceBackends) are used in conjunction:
 
 ```
 {{#haproxyConf bundles}}
@@ -622,6 +584,3 @@ Refer to [Logging](Logging) for further details on Elasticsearch bundle installa
 ### Check the generated HAProxy configuration
 
 The ConductR HAProxy bundle will generate HAProxy configuration in `/etc/haproxy/haproxy.cfg` - check if the generated HAProxy configuration is correct.
-
-
-

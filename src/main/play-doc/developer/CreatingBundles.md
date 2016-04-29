@@ -84,21 +84,22 @@ Typesafe config provides the ability to substitute environment variables if they
 
 
 ```scala
-BundleKeys.endpoints := Map("customer_service" -> Endpoint("http", 0, "customers", RequestAcl(Http("^/customers".r))))
+BundleKeys.endpoints := Map("customer-service" -> Endpoint("http", 0, "customers", RequestAcl(Http("^/customers".r))))
 ```
 
-* The endpoint name is `customer_service`.
+* The endpoint name is `customer-service`.
 * The endpoint exposes `http` based service.
 * The port is declared as `0`, meaning it will be assigned with a port number picked by ConductR.
-* The service name is `customers` which can be used to resolve the endpoint by service name. Refer to [Resolving services](ResolvingServices) for further details.
-* The request acl declares the endpoint will accept any http request having path starting with `/customers`. Refer to [Request acl configuration](RequestAclConfiguration) for further details.
+* The service name is `customers` which can be used to resolve the endpoint by service name. Refer to [[Resolving services|ResolvingServices]] for further details.
+* The endpoint will accept any http request that starts with the path `/customers`. Refer to [[ACL configuration
+|RequestAclConfiguration]] for further details.
 
-With the above Typesafe config you can then access the host and ip to use from within your application using code along the lines of following and using akka-http as an example:
+With the above Typesafe config you can then resolve the ip address and port within your application. The following example additionally uses Akka HTTP to start a HTTP server:
 
 ```scala
-  val ip = config.getString("customer_service.ip")
-  val port = config.getInt("customer_service.port")
-  Http(system).bind(ip, port) // ... and so forth
+val ip = config.getString("customer-service.ip")
+val port = config.getInt("customer-service.port")
+Http(system).bind(ip, port) // ... and so forth
 ```
 
 ## Docker bundles

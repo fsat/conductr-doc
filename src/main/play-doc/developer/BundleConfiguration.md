@@ -60,7 +60,6 @@ protocol			 | Discussed [below](#Endpoints).
 roles                | The types of node in the cluster that this bundle can be deployed to. Defaults to "web".
 service-name	     | Discussed [below](#Endpoints).
 acls     			 | Discussed [below](#Endpoints).
-services             | Deprecated in lieu of `acls`. Discussed [below](#Endpoints).
 start-command        | Command line args required to start the component. Paths are expressed relative to the component's bin folder. The default is to use the bash script in the bin folder. Arguments can be passed to a Docker container run command via a special `dockerArgs` command should additional args be required: `start-command = ["dockerArgs","-v","/var/lib/postgresql/data:/var/lib/postgresql/data"]`.
 system               | A logical name that can be used to associate multiple bundles with each other. This could be an application or service association e.g. myapp. Defaults to the package name.
 systemVersion        | A version to associate with a system. This setting defaults to the value of compatibilityVersion.
@@ -88,9 +87,9 @@ Endpoints are declared using an `endpoint` setting using a Map of `endpoint-name
 
 The bind-port allocated to your bundle will be available as an environment variable to your component. For example, given the default settings where an endpoint named "web" is declared that has a dynamically allocated port, an environment variable named `WEB_BIND_PORT` will become available. `WEB_BIND_IP` is also available and should be used as the interface to bind to.  
 
-Service names are declared through `serviceName` property for each endpoint. A service name is used address the service when performing a service lookup. [Resolving services](ResolvingServices) describes service resolution in a greater detail.
+Service names are declared through `serviceName` property for each endpoint. A service name is used address the service when performing a service lookup. [[Resolving services|ResolvingServices]] describes service resolution in a greater detail.
 
-The request acls is declared through `acls` property, and allows declaration of HTTP, TCP, and UDP based endpoints. [Request acl configuration](RequestAclConfiguration) describes how to configure request acls in a greater detail.
+The request acls is declared through the `acls` property, and allows declaration of HTTP, TCP, and UDP based endpoints. [[ACL configuration|AclConfiguration]] describes how to configure request acls in a greater detail.
 
 ### Docker Containers and ports
 
