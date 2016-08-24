@@ -275,7 +275,7 @@ Docker needs to be installed on the host where HAProxy docker container will run
 
 #### Preparing HAProxy config
 
-Setup basic HAProxy configuration for the Docker based HAProxy. Ensure the `conductr-agent` user which runs the ConductR-HAProxy has ownership to the HAProxy config file.
+Setup basic HAProxy configuration for the Docker based HAProxy. Ensure that the `conductr-agent` user which runs the ConductR-HAProxy has ownership to the HAProxy config file.
 
 ```bash
 [172.17.0.1]$ sudo mkdir /etc/haproxy
@@ -373,9 +373,9 @@ We will limit the bundle's sudo privileges to running `/usr/bin/reloadHAProxy.sh
 [172.17.0.1]$ echo "conductr-agent ALL=(root) NOPASSWD: /usr/bin/reloadHAProxy.sh" | sudo tee -a /etc/sudoers
 ```
 
-#### Using HAProxy reload script from a customised location
+#### Using HAProxy reload script from a customized location
 
-HAProxy reload script location can be customised. ConductR-HAProxy will install its reload script in this location upon startup.
+HAProxy reload script location can be customized. ConductR-HAProxy will install its reload script in this location upon startup.
 
 Suppose the HAProxy reload script will be placed in `/etc/haproxy/reloadHAProxy.sh`, we will limit the bundle's sudo privileges to running this script. Grant permissions to the `conductr-agent` user to run the `reloadHAProxy.sh` command. An addition to `/etc/sudoers` allows for using `sudo` without password for the `reloadHAProxy.sh` script.
 
@@ -437,7 +437,7 @@ The `runtime-config.sh` configuration script will be sourced as part of the Cond
 
 _Follow these steps when using Docker-based HAProxy._
 
-HAProxy configuration and the reload behaviour need to be customised to support running ConductR-HAProxy Bundle alongside Docker-based HAProxy.
+HAProxy configuration and the reload behaviour need to be customized to support running ConductR-HAProxy Bundle alongside Docker-based HAProxy.
 
 Create a file called `haproxy-override.cfg` within the proxy configuration directory, e.g.
 
@@ -530,13 +530,13 @@ export HAPROXY_BIND_HOST=0.0.0.0
 export HAPROXY_RELOAD_SCRIPT_SOURCE="$CONFIG_DIR/reloadHAProxy.sh"
 ```
 
-The `CONDUCTR_HAPROXY_CONFIG_OVERRIDE` and `HAPROXY_RELOAD_SCRIPT_SOURCE` supplies the customised HAProxy configuration and reload script respectively.
+The `CONDUCTR_HAPROXY_CONFIG_OVERRIDE` and `HAPROXY_RELOAD_SCRIPT_SOURCE` supplies the customized HAProxy configuration and reload script respectively.
 
 The `HAPROXY_BIND_HOST` configures the HAProxy to be bound to `0.0.0.0` address within the Docker container. This will allow the same configuration to be used regardless of the Docker IP assigned to the container. This setup should not present any additional attack surface due to the fact that access to the ports within the container must be configured explicity as part of Docker run command.
 
-#### Configuration for customised HAProxy reload script location
+#### Configuration for customized HAProxy reload script location
 
-_Follow this step when using a customised HAProxy reload script location._
+_Follow this step when using a customized HAProxy reload script location._
 
 Append the `/tmp/custom-haproxy-conf/runtime-config.sh` file with the following entries.
 
@@ -564,10 +564,10 @@ The generated file `custom-haproxy-conf-ffd0dcf76f4d565424a873022fbb39f3025d4239
 _Execute the step in this section only on the `172.17.0.1` machine. We could also use a host that is not a cluster member as our control node._
 
 
-If configuration bundle needs to be supplied with the Conductr-HAProxy bundle, load the ConductR-HAProxy bundle with its customised configuration and run as follows.
+If configuration bundle needs to be supplied with the Conductr-HAProxy bundle, load the ConductR-HAProxy bundle with its customized configuration and run as follows.
 
 ```bash
-[172.17.0.1]$ conduct load file:/usr/share/conductr/extra/conductr-haproxy-{version}-{digest}.zip {path-to-customised-config-zip}
+[172.17.0.1]$ conduct load file:/usr/share/conductr/extra/conductr-haproxy-{version}-{digest}.zip {path-to-customized-config-zip}
 ```
 
 Otherwise, load the ConductR-HAProxy bundle by itself.
@@ -1033,7 +1033,7 @@ Docker needs to be installed on the host where HAProxy docker container will run
 
 #### Preparing HAProxy config
 
-Setup basic HAProxy configuration for the Docker based HAProxy. Ensure the `conductr-agent` user which runs the ConductR-HAProxy has ownership to the HAProxy config file.
+Setup basic HAProxy configuration for the Docker based HAProxy. Ensure that the `conductr-agent` user which runs the ConductR-HAProxy has ownership to the HAProxy config file.
 
 ```bash
 [172.17.0.1]$ sudo mkdir /etc/haproxy
@@ -1131,9 +1131,9 @@ We will limit the bundle's sudo privileges to running `/usr/bin/reloadHAProxy.sh
 [172.17.0.1]$ echo "conductr-agent ALL=(root) NOPASSWD: /usr/bin/reloadHAProxy.sh" | sudo tee -a /etc/sudoers
 ```
 
-#### Using HAProxy reload script from a customised location
+#### Using HAProxy reload script from a customized location
 
-HAProxy reload script location can be customised. ConductR-HAProxy will install its reload script in this location upon startup.
+HAProxy reload script location can be customized. ConductR-HAProxy will install its reload script in this location upon startup.
 
 Suppose the HAProxy reload script will be placed in `/etc/haproxy/reloadHAProxy.sh`, we will limit the bundle's sudo privileges to running this script. Grant permissions to the `conductr-agent` user to run the `reloadHAProxy.sh` command. An addition to `/etc/sudoers` allows for using `sudo` without password for the `reloadHAProxy.sh` script.
 
@@ -1210,7 +1210,7 @@ The `runtime-config.sh` configuration script will be sourced as part of the Cond
 
 _Follow these steps when using Docker-based HAProxy._
 
-HAProxy configuration and the reload behaviour need to be customised to support running ConductR-HAProxy Bundle alongside Docker-based HAProxy.
+HAProxy configuration and the reload behaviour need to be customized to support running ConductR-HAProxy Bundle alongside Docker-based HAProxy.
 
 Create a file called `haproxy-override.cfg` within the proxy configuration directory, e.g.
 
@@ -1303,13 +1303,13 @@ export HAPROXY_BIND_HOST=0.0.0.0
 export HAPROXY_RELOAD_SCRIPT_SOURCE="$CONFIG_DIR/reloadHAProxy.sh"
 ```
 
-The `CONDUCTR_HAPROXY_CONFIG_OVERRIDE` and `HAPROXY_RELOAD_SCRIPT_SOURCE` supplies the customised HAProxy configuration and reload script respectively.
+The `CONDUCTR_HAPROXY_CONFIG_OVERRIDE` and `HAPROXY_RELOAD_SCRIPT_SOURCE` supplies the customized HAProxy configuration and reload script respectively.
 
 The `HAPROXY_BIND_HOST` configures the HAProxy to be bound to `0.0.0.0` address within the Docker container. This will allow the same configuration to be used regardless of the Docker IP assigned to the container. This setup should not present any additional attack surface due to the fact that access to the ports within the container must be configured explicity as part of Docker run command.
 
-#### Configuration for customised HAProxy reload script location
+#### Configuration for customized HAProxy reload script location
 
-_Follow this step when using a customised HAProxy reload script location._
+_Follow this step when using a customized HAProxy reload script location._
 
 Append the `/tmp/custom-haproxy-conf/runtime-config.sh` file with the following entries.
 
@@ -1334,10 +1334,10 @@ The generated file `custom-haproxy-conf-ffd0dcf76f4d565424a873022fbb39f3025d4239
 
 ### Use CLI to load and run ConductR-HAProxy bundle
 
-If configuration bundle needs to be supplied with the Conductr-HAProxy bundle, load the ConductR-HAProxy bundle with its customised configuration and run as follows.
+If configuration bundle needs to be supplied with the Conductr-HAProxy bundle, load the ConductR-HAProxy bundle with its customized configuration and run as follows.
 
 ```bash
-[172.17.0.1]$ conduct load file:/tmp/conductr-haproxy-{version}-{digest}.zip {path-to-customised-config-zip}
+[172.17.0.1]$ conduct load file:/tmp/conductr-haproxy-{version}-{digest}.zip {path-to-customized-config-zip}
 ```
 
 Otherwise, load the ConductR-HAProxy bundle by itself.
