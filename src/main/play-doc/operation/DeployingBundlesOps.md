@@ -13,7 +13,7 @@ This data is used by the ConductR when making bundle scheduling decisions. Load 
 
 ```bash
 conduct load --ip 172.17.0.1 \
-             /usr/share/conductr/samples/visualizer-...zip \
+             visualizer \
              ./visualizer-poll-interval.sh-...zip
 ```
 
@@ -86,7 +86,7 @@ conduct load /tmp/downloads/reactive-maps-frontend-v1-023f9da2243a0751c2e231b452
 conduct load http://192.168.0.1/files/reactive-maps-frontend-v1-023f9da2243a0751c2e231b452aa3ed32fbc35351c543fbd536eea7ec457cfe2.zip
 ```
 
-The Bintray resolver accepts a [bundle shorthand expression](#Bundle-shorthand-expression) which is translated to a Bintray download URL. Bundles can be published to Bintray using [sbt-bintray-bundle](https://github.com/sbt/sbt-bintray-bundle) plugin.
+The Bintray resolver accepts a [bundle shorthand expression](#Bundle-shorthand-expression) and [bundle configuration shorthand expression](#Bundle-configuration-shorthand-expression) which is translated to a Bintray download URL. Bundles can be published to Bintray using [sbt-bintray-bundle](https://github.com/sbt/sbt-bintray-bundle) plugin.
 
 
 ## Bundle shorthand expression
@@ -107,6 +107,16 @@ reactive-maps-frontend:v1-023f9da2243a0751c2e231b452aa3ed32fbc35351c543fbd536eea
 my-company/secret-repo/super-bundle:v1                                                     | Latest version of the `super-bundle` bundle having `compatibility-version` of `v1` hosted within `organization` called `my-company` and `repository` called `secret-repo`.
 
 
+## Bundle configuration shorthand expression
+
+The shorthand expression for bundle configuration is essentially the same as the [bundle shorthand expression](#Bundle-shorthand-expression), with the `repository` defaults to `bundle-configuration`.
+
+The bundle shorthand expression is distinguished from bundle configuration by its position in the `conduct load` command.
+
+```
+conduct load <bundle> [<bundle configuration>]
+```
+
 ## Implementing your own custom resolver
 
 The CLI tool is written in Python to support Python 3 and above, and hence the custom resolver must be written in Python 3.
@@ -121,14 +131,24 @@ from conductr_cli.resolvers import uri_resolver
 # other imports here...
 
 
-def load_from_cache(cache_dir, uri):
+def load_bundle_from_cache(cache_dir, uri):
     actual_http_url_or_file_path = do_convert(uri)
-    return uri_resolver.load_from_cache(cache_dir, actual_http_url_or_file_path)
+    return uri_resolver.load_bundle_from_cache(cache_dir, actual_http_url_or_file_path)
 
 
 def resolve_bundle(cache_dir, uri):
     actual_http_url_or_file_path = do_convert(uri)
     return uri_resolver.resolve_bundle(cache_dir, actual_http_url_or_file_path)
+
+
+def load_bundle_configuration_from_cache(cache_dir, uri):
+    actual_http_url_or_file_path = do_convert(uri)
+    return uri_resolver.load_bundle_configuration_from_cache(cache_dir, actual_http_url_or_file_path)
+
+
+def resolve_bundle_configuration(cache_dir, uri):
+    actual_http_url_or_file_path = do_convert(uri)
+    return uri_resolver.resolve_bundle_configuration(cache_dir, actual_http_url_or_file_path)
 
 
 def do_convert(uri):
