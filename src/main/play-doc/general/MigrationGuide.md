@@ -5,13 +5,13 @@ This document describes what is required to move between version 1.1 to 2.0.
 
 Here is a list of major areas to be considered when migrating:
 
-* [Binary incompatibility](#Binary_incompatibility)
-* [Topology change](#Topology_change)
-* [Node peer access](#Node_peer_access)
+* [Binary incompatibility](#Binary-incompatibility)
+* [Topology change](#Topology-change)
+* [Node peer access](#Node-peer-access)
 * [Proxying](#Proxying)
 * [Syslog](#Syslog)
-* [Service endpoint declaration](#Service_endpoint_declaration)
-* [Bundles and bundle configurations repository](#Bundles_and_bundle_configurations_repository)
+* [Service endpoint declaration](#Service-endpoint-declaration)
+* [Bundles and bundle configurations repository](#Bundles-and-bundle-configurations-repository)
 
 
 ## Binary incompatibility
