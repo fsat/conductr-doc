@@ -7,7 +7,10 @@ Here is a list of major areas to be considered when migrating:
 
 * [Binary incompatibility](#Binary_incompatibility)
 * [Topology change](#Topology_change)
+* [Node peer access](#Node_peer_access)
 * [Proxying](#Proxying)
+* [Syslog](#Syslog)
+* [Service endpoint declaration](#Service_endpoint_declaration)
 
 
 ## Binary incompatibility
@@ -26,7 +29,7 @@ ConductR Agent is responsible for running bundle processes. As such, the bundle 
 
 The ConductR Core and ConductR Agent is available as 2 different packages. The [[installation instructions|Install]] describes the steps of installing ConductR Core and ConductR Agent on the same host. These steps are also applicable should ConductR Core and ConductR Agent installation on different hosts be desired.
 
-## Node Peer Access
+## Node peer access
 
 This distributed topology enables Agents to be managed by remote Cores. This requires nodes to be able to reach each other on ports 2552, 9005, 9007 and 9008 in addition to the 9004 and 9006 ports previously required with 1.1. See also the port table in [[Subnets and Security Groups|Install#Subnets-and-Security-Groups]].
 
