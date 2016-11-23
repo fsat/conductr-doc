@@ -495,4 +495,8 @@ Similarly, the following bundle configuration has been published to Bintray as w
 * `conductr-haproxy-dev-mode`
 * `elasticsearch-prod`
 
-As such, these bundles and bundle configurations can be resolved by [conductr-cli](CLI). For example, installing Elasticsearch bundle with production configuration can be achieved using `conduct load conductr-elasticsearch elasticsearch-prod`
+As such, these bundles and bundle configurations can be resolved by [conductr-cli](CLI). For example, installing Elasticsearch bundle with production configuration can be achieved using the following command.
+
+```
+conduct load conductr-elasticsearch elasticsearch-prod
+```
