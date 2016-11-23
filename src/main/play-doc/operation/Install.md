@@ -906,7 +906,7 @@ The ConductR-HAProxy bundle will automatically update HAProxy to expose bundle s
 
 Upload the ConductR-HAProxy bundle to the bastion host and use the [[CLI|CLI]] to load the ConductR-HAProxy bundle from the [bundles repo](https://bintray.com/typesafe/bundle).
 
-For Linux (not bundle configuration):
+For Linux:
 
 ```bash
 $ dcos conduct load conductr-haproxy
@@ -951,7 +951,7 @@ The `compatibilityVersion` is explained in the to [bundle configuration](BundleC
 The bundle can now be scaled to run multiple instances.
 
 ```bash
-$ dcos conduct run --scale=3 visual
+$ dcos conduct run --scale=3 visualizer
 ```
 
 Test service endpoints from the public nodes to ensure connectivity. The `/etc/haproxy/haproxy.cfg` file on the public nodes contains the frontend and backend configurations for services exposed by bundles. Test the front end bind port and path using `curl` and the public node ip address to ensure proxying is working correctly.
