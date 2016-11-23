@@ -11,6 +11,7 @@ Here is a list of major areas to be considered when migrating:
 * [Proxying](#Proxying)
 * [Syslog](#Syslog)
 * [Service endpoint declaration](#Service_endpoint_declaration)
+* [Bundles and bundle configurations repository](#Bundles_and_bundle_configurations_repository)
 
 
 ## Binary incompatibility
@@ -476,3 +477,22 @@ To:
       }
     }
 ```
+
+## Bundles and bundle configurations repository
+
+The following bundles has been published to Bintray.
+
+* `conductr-elasticsearch`
+* `conductr-haproxy`
+* `conductr-kibana`
+* `continuous-delivery`
+* `eslite`
+* `visualizer`
+
+Similarly, the following bundle configuration has been published to Bintray as well.
+
+* `conductr-haproxy-coreos`
+* `conductr-haproxy-dev-mode`
+* `elasticsearch-prod`
+
+As such, these bundles and bundle configurations can be resolved by [conductr-cli](CLI). For example, installing Elasticsearch bundle with production configuration can be achieved using `conduct load conductr-elasticsearch elasticsearch-prod`
